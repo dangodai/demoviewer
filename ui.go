@@ -1,13 +1,22 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/dangodai/demoviewer/demos"
 	"github.com/visualfc/goqt/ui"
+)
+
+var (
+	demolist []demos.Demo
 )
 
 //MainWindow creates main gui
 type MainWindow struct {
 	*ui.QMainWindow
+	list    *ui.QListWidget
+	details *ui.QPlainTextEdit
+	events  *ui.QPlainTextEdit
 }
 
 func NewMainWindow() *MainWindow {
@@ -16,8 +25,38 @@ func NewMainWindow() *MainWindow {
 	window.SetWindowTitle("Demo Viewer v0.0.1")
 	window.SetMinimumSizeWithMinwMinh(500, 300)
 	window.createMenuBar()
+	window.setupWidgets()
+
+	detailsLayout := ui.NewBoxLayout(ui.QBoxLayout_LeftToRight, nil)
+	detailsLayout.SetContentsMarginsWithLeftTopRightBottom(0, 0, 0, 0)
+	detailsLayout.AddWidget(window.details)
+	detailsLayout.AddWidget(window.events)
+
+	detailsContainer := ui.NewWidget()
+	detailsContainer.SetLayout(detailsLayout)
+
+	containerLayout := ui.NewBoxLayout(ui.QBoxLayout_TopToBottom, nil)
+	containerLayout.AddWidget(window.list)
+	containerLayout.AddWidget(detailsContainer)
+
+	container := ui.NewWidget()
+	container.SetLayout(containerLayout)
+
+	window.SetCentralWidget(container)
 
 	return window
+}
+
+func (w *MainWindow) setupWidgets() {
+	w.list = ui.NewListWidget()
+	w.list.OnItemSelectionChanged(w.displayDemoDetails)
+	w.list.OnItemDoubleClicked(func(widget *ui.QListWidgetItem) { w.playSelectedDemo() })
+
+	w.details = ui.NewPlainTextEdit()
+	w.details.SetReadOnly(true)
+
+	w.events = ui.NewPlainTextEdit()
+	w.events.SetReadOnly(true)
 }
 
 func (w *MainWindow) createMenuBar() {
@@ -26,6 +65,16 @@ func (w *MainWindow) createMenuBar() {
 
 	fileMenu := w.MenuBar().AddMenuWithTitle("File")
 	fileMenu.AddAction(selectFolder)
+
+	playDemo := ui.NewActionWithTextParent(w.Tr("Play Demo"), w)
+	playDemo.OnTriggered(w.playSelectedDemo)
+	deleteDemo := ui.NewActionWithTextParent(w.Tr("Delete Demo"), w)
+	deleteDemo.OnTriggered(w.deleteSelectedDemo)
+
+	demoMenu := w.MenuBar().AddMenuWithTitle("Demo")
+	demoMenu.AddAction(playDemo)
+	demoMenu.AddSeparator()
+	demoMenu.AddAction(deleteDemo)
 }
 
 func (w *MainWindow) selectDemoFolder() {
@@ -36,7 +85,43 @@ func (w *MainWindow) selectDemoFolder() {
 }
 
 func (w *MainWindow) displayDemos() {
+	demolist = demos.GetDemos()
+	for _, d := range demolist {
+		temp := ui.NewListWidgetItem()
+		temp.SetText(d.Name())
 
+		if d.Events() != nil {
+			temp.SetTextColor(ui.NewColorWithInt32Int32Int32Int32(250, 117, 50, 255))
+		}
+
+		w.list.AddItem(temp)
+	}
+}
+
+func (w *MainWindow) displayDemoDetails() {
+	row := w.list.CurrentRow()
+
+	//Display the file details
+	w.details.SetPlainText(fmt.Sprintf("File: %v\nPath: %v\nDate: %v\n",
+		demolist[row].Name(),
+		demolist[row].Path(),
+		demolist[row].Date().Format("Jan 2 15:04:05, 2006")))
+
+	//Display the event details
+	var s string
+	for _, e := range demolist[row].Events() {
+		s += fmt.Sprintf("[%v] %v (%v)\n", e.Name, e.Value, e.Tick)
+	}
+	w.events.SetPlainText(s)
+}
+
+func (w *MainWindow) playSelectedDemo() {
+	demolist[w.list.CurrentRow()].Play()
+}
+
+func (w *MainWindow) deleteSelectedDemo() {
+	demolist[w.list.CurrentRow()].Delete()
+	w.list.CurrentItem().Delete()
 }
 
 func setDemoFolder() {

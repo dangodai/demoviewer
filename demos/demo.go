@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 type Demo struct {
@@ -20,6 +21,10 @@ func (d *Demo) Name() string {
 
 func (d *Demo) Path() string {
 	return d.demoPath
+}
+
+func (d *Demo) Date() time.Time {
+	return d.info.ModTime()
 }
 
 //Returns the path to the demo from within the TF folder
@@ -66,5 +71,9 @@ func getEvents(path string) []Event {
 	data, _ := ioutil.ReadFile(path)
 	json.Unmarshal(data, &events)
 
-	return events.Events
+	if len(events.Events) != 0 {
+		return events.Events
+	}
+	return nil
+
 }
