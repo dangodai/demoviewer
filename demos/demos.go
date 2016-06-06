@@ -29,21 +29,21 @@ func demoVisitor(path string, info os.FileInfo, err error) error {
 
 	//Look for the matching json file
 	jsonPath := path[:len(path)-4] + ".json"
-  events := []Event{}
+	events := []Event{}
 	_, e := os.Open(jsonPath)
 	if e == nil {
 		events = getEvents(jsonPath)
 	} else {
-    events = nil
-    jsonPath = ""
-  }
+		events = nil
+		jsonPath = ""
+	}
 
-  demos = append(demos, Demo{
-    info:     info,
-    events:   events,
-    jsonPath: jsonPath,
-    demoPath: path,
-  })
+	demos = append(demos, Demo{
+		info:     info,
+		events:   events,
+		jsonPath: jsonPath,
+		demoPath: path,
+	})
 
 	return nil
 }

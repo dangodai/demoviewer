@@ -2,11 +2,10 @@ package demos
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
-  "os/exec"
-  "strings"
+	"os/exec"
+	"strings"
 )
 
 type Demo struct {
@@ -27,7 +26,7 @@ func (d *Demo) Path() string {
 //(Since TF2 only searches directly in the TF folder unless told otherwise)
 //A little bit hackish
 func (d *Demo) PathInTFFolder() string {
-  return strings.Split(d.Path(), "Team Fortress 2/tf/")[1]
+	return strings.Split(d.Path(), "Team Fortress 2/tf/")[1]
 }
 
 func (d *Demo) Events() []Event {
@@ -35,19 +34,31 @@ func (d *Demo) Events() []Event {
 }
 
 func (d *Demo) Play() {
-  cmd := exec.Command("steam", "-applaunch", "440", "+playdemo", d.PathInTFFolder())
-  err := cmd.Start()
-  fmt.Println(err)
+	cmd := exec.Command("steam", "-applaunch", "440", "+playdemo", d.PathInTFFolder())
+	cmd.Start()
+}
+
+func (d *Demo) Delete() bool {
+	if d.jsonPath != "" {
+		if err := os.Remove(d.jsonPath); err != nil {
+			return false
+		}
+	}
+	if err := os.Remove(d.demoPath); err != nil {
+		return false
+	}
+
+	return true
 }
 
 type EventResponse struct {
-  Events []Event `json:"events"`
+	Events []Event `json:"events"`
 }
 
 type Event struct {
-	Name string `json:"name"`
-  Value string `json:"value"`
-  Tick int `json:"tick"`
+	Name  string `json:"name"`
+	Value string `json:"value"`
+	Tick  int    `json:"tick"`
 }
 
 func getEvents(path string) []Event {
