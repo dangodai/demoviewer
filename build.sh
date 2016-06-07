@@ -1,1 +1,1 @@
-go build -ldflags "-r ." -o $GOPATH/bin/demoviewer
+go build -ldflags "-s -w" -o $GOPATH/bin/demoviewer
