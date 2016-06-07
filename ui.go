@@ -85,7 +85,7 @@ func (w *MainWindow) selectDemoFolder() {
 }
 
 func (w *MainWindow) displayDemos() {
-	//w.list.Clear()
+	w.list.Clear()
 	demolist = demos.GetDemos()
 	for _, d := range demolist {
 		temp := ui.NewListWidgetItem()
