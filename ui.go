@@ -85,6 +85,7 @@ func (w *MainWindow) selectDemoFolder() {
 }
 
 func (w *MainWindow) displayDemos() {
+	//w.list.Clear()
 	demolist = demos.GetDemos()
 	for _, d := range demolist {
 		temp := ui.NewListWidgetItem()
@@ -96,9 +97,14 @@ func (w *MainWindow) displayDemos() {
 
 		w.list.AddItem(temp)
 	}
+	w.list.SetCurrentRow(0)
 }
 
 func (w *MainWindow) displayDemoDetails() {
+	if len(demolist) == 0 {
+		return
+	}
+
 	row := w.list.CurrentRow()
 
 	//Display the file details
