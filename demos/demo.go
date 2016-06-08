@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -39,7 +40,12 @@ func (d *Demo) Events() []Event {
 }
 
 func (d *Demo) Play() {
-	cmd := exec.Command("steam", "-applaunch", "440", "+playdemo", d.PathInTFFolder())
+	//Steam isn't in PATH on windows systems, have to specify steam path
+	command := "steam"
+	if runtime.GOOS == "windows" {
+		command = "C:\\Program Files(x86)\\Steam\\Steam.exe"
+	}
+	cmd := exec.Command(command, "-applaunch", "440", "+playdemo", d.PathInTFFolder())
 	cmd.Start()
 }
 
