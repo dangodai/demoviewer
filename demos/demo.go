@@ -2,7 +2,6 @@ package demos
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -47,8 +46,6 @@ func (d *Demo) Play() {
 		cmd = exec.Command("cmd", "/c", "start", "", `C:\Program Files (x86)\Steam\Steam.exe`,
 			"-applaunch", "440", "+playdemo", d.PathInTFFolder())
 	}
-	fmt.Println(`C:\Program Files (x86)\Steam\Steam.exe`,
-		"-applaunch", "440", "+playdemo", d.PathInTFFolder())
 	cmd.Start()
 }
 
