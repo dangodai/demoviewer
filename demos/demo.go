@@ -34,8 +34,8 @@ func (d *Demo) Date() time.Time {
 //A little bit hackish
 func (d *Demo) PathInTFFolder() string {
 	fmt.Println("Removing: ", demosPath+string(os.PathSeparator))
-	fmt.Println("From: ", d.Path())
-	return strings.Replace(d.Path(), demosPath+string(os.PathSeparator), "", 1)
+	fmt.Println("From: ", strings.Replace(d.Path(), "/", string(os.PathSeparator), -1))
+	return strings.Replace(strings.Replace(d.Path(), "/", string(os.PathSeparator), -1), demosPath+string(os.PathSeparator), "", 1)
 }
 
 func (d *Demo) Events() []Event {
