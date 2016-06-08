@@ -2,7 +2,6 @@ package demos
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -44,9 +43,10 @@ func (d *Demo) Play() {
 	//Steam isn't in PATH on windows systems, have to specify steam path
 	cmd := exec.Command("steam", "-applaunch", "440", "+playdemo", d.PathInTFFolder())
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/c", "start", "", `C:\Program Files(x86)\Steam\Steam.exe`)
+		cmd = exec.Command("cmd", "/c", "start", "", `C:\Program Files (x86)\Steam\Steam.exe`,
+			"-applaunch", "440", "+playdemo", d.PathInTFFolder())
 	}
-	fmt.Println(cmd.Start())
+	cmd.Start()
 }
 
 func (d *Demo) Delete() bool {
