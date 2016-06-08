@@ -33,9 +33,7 @@ func (d *Demo) Date() time.Time {
 //(Since TF2 only searches directly in the TF folder unless told otherwise)
 //A little bit hackish
 func (d *Demo) PathInTFFolder() string {
-	fmt.Println("Removing: ", demosPath+string(os.PathSeparator))
-	fmt.Println("From: ", strings.Replace(d.Path(), "/", string(os.PathSeparator), -1))
-	return strings.Replace(strings.Replace(d.Path(), "/", string(os.PathSeparator), -1), demosPath+string(os.PathSeparator), "", 1)
+	return strings.Replace(d.Path(), strings.Replace(demosPath+string(os.PathSeparator), "/", string(os.PathSeparator), -1), "", 1)
 }
 
 func (d *Demo) Events() []Event {
