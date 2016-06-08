@@ -43,7 +43,7 @@ func (d *Demo) Play() {
 	//Steam isn't in PATH on windows systems, have to specify steam path
 	command := "steam"
 	if runtime.GOOS == "windows" {
-		command = "C:\\Program Files(x86)\\Steam\\Steam.exe"
+		command = `C:\Program Files(x86)\Steam\Steam.exe`
 	}
 	cmd := exec.Command(command, "-applaunch", "440", "+playdemo", d.PathInTFFolder())
 	cmd.Start()
