@@ -31,7 +31,7 @@ func (d *Demo) Date() time.Time {
 //(Since TF2 only searches directly in the TF folder unless told otherwise)
 //A little bit hackish
 func (d *Demo) PathInTFFolder() string {
-	return strings.Split(d.Path(), "Team Fortress 2/tf/")[1]
+	return strings.Replace(d.Path(), demosPath+string(os.PathSeparator), "", 1)
 }
 
 func (d *Demo) Events() []Event {
