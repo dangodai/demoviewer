@@ -2,6 +2,7 @@ package demos
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -32,6 +33,8 @@ func (d *Demo) Date() time.Time {
 //(Since TF2 only searches directly in the TF folder unless told otherwise)
 //A little bit hackish
 func (d *Demo) PathInTFFolder() string {
+	fmt.Println("Removing: ", demosPath+string(os.PathSeparator))
+	fmt.Println("From: ", d.Path())
 	return strings.Replace(d.Path(), demosPath+string(os.PathSeparator), "", 1)
 }
 
@@ -46,6 +49,8 @@ func (d *Demo) Play() {
 		cmd = exec.Command("cmd", "/c", "start", "", `C:\Program Files (x86)\Steam\Steam.exe`,
 			"-applaunch", "440", "+playdemo", d.PathInTFFolder())
 	}
+	fmt.Println(`C:\Program Files (x86)\Steam\Steam.exe`,
+		"-applaunch", "440", "+playdemo", d.PathInTFFolder())
 	cmd.Start()
 }
 
