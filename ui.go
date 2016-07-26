@@ -22,7 +22,7 @@ type MainWindow struct {
 func NewMainWindow() *MainWindow {
 	window := &MainWindow{}
 	window.QMainWindow = ui.NewMainWindow()
-	window.SetWindowTitle("Demo Viewer v0.0.1")
+	window.SetWindowTitle("Demo Viewer v0.1")
 	window.SetMinimumSizeWithMinwMinh(500, 300)
 	window.createMenuBar()
 	window.setupWidgets()
@@ -44,6 +44,7 @@ func NewMainWindow() *MainWindow {
 
 	window.SetCentralWidget(container)
 
+	window.displayDemos()
 	return window
 }
 
@@ -108,9 +109,10 @@ func (w *MainWindow) displayDemoDetails() {
 	row := w.list.CurrentRow()
 
 	//Display the file details
-	w.details.SetPlainText(fmt.Sprintf("File: %v\nPath: %v\nDate: %v\n",
+	w.details.SetPlainText(fmt.Sprintf("User: %v\nMap: %v\nCommand: playdemo %v\nDate: %v\n",
+		demolist[row].ClientName(),
+		demolist[row].MapName(),
 		demolist[row].Name(),
-		demolist[row].Path(),
 		demolist[row].Date().Format("Jan 2 15:04:05, 2006")))
 
 	//Display the event details

@@ -1,7 +1,9 @@
 package demos
 
 import (
+	"fmt"
 	"os"
+	"os/user"
 	"path/filepath"
 	//"fmt"
 )
@@ -11,9 +13,19 @@ var (
 	demos     []Demo
 )
 
+func init() {
+	SetPathToDefault()
+}
+
 //Maybe error check and make sure the path is valid?
 func SetPath(p string) {
 	demosPath = p
+}
+
+func SetPathToDefault() {
+	usr, _ := user.Current()
+	demosPath = fmt.Sprintf("%v/%v", usr.HomeDir, `.steam/steam/steamapps/common/Team Fortress 2/tf/`)
+	fmt.Println(demosPath)
 }
 
 func GetDemos() []Demo {
