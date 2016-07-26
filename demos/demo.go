@@ -12,12 +12,25 @@ import (
 
 type Demo struct {
 	info               os.FileInfo
+	header             DemoHeader
 	events             []Event
 	jsonPath, demoPath string
 }
 
 func (d *Demo) Name() string {
 	return d.info.Name()
+}
+
+func (d *Demo) MapName() string {
+	return d.header.GetMapName()
+}
+
+func (d *Demo) ServerName() string {
+	return d.header.GetServerName()
+}
+
+func (d *Demo) ClientName() string {
+	return d.header.GetClientName()
 }
 
 func (d *Demo) Path() string {

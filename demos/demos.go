@@ -40,6 +40,7 @@ func demoVisitor(path string, info os.FileInfo, err error) error {
 
 	demos = append(demos, Demo{
 		info:     info,
+		header:   ReadHeaderFromFile(path),
 		events:   events,
 		jsonPath: jsonPath,
 		demoPath: path,
