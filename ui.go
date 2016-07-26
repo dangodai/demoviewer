@@ -44,7 +44,7 @@ func NewMainWindow() *MainWindow {
 
 	window.SetCentralWidget(container)
 
-	window.displayDemos()
+	//window.displayDemos()
 	return window
 }
 
@@ -112,7 +112,7 @@ func (w *MainWindow) displayDemoDetails() {
 	w.details.SetPlainText(fmt.Sprintf("User: %v\nMap: %v\nCommand: playdemo %v\nDate: %v\n",
 		demolist[row].ClientName(),
 		demolist[row].MapName(),
-		demolist[row].Name(),
+		demolist[row].PathInTFFolder(),
 		demolist[row].Date().Format("Jan 2 15:04:05, 2006")))
 
 	//Display the event details
