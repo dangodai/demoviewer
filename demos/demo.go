@@ -64,7 +64,7 @@ func (d *Demo) Date() time.Time {
 //A little bit hackish
 func (d *Demo) PathInTFFolder() string {
 	//Make sure we don't crash if they don't choose the tf folder properly
-	temp := strings.Split(d.Path(), "/tf/")
+	temp := strings.Split(strings.Replace(d.Path(), string(os.PathSeparator), "/", -1), "/tf/")
 	return temp[len(temp)-1]
 }
 
