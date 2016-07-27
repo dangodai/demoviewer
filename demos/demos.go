@@ -9,25 +9,29 @@ import (
 )
 
 var (
-	demosPath string
-	demos     []Demo
+	demosPath string //The selected path to look for demos
+	demos     []Demo //Slice holding all of the demos found in demosPath
 )
 
 func init() {
-	SetPathToDefault()
+	setPathToDefault()
 }
 
-//Maybe error check and make sure the path is valid?
+//SetPath sets package variable demosPath, which is used to search for demo files
 func SetPath(p string) {
 	demosPath = p
 }
 
-func SetPathToDefault() {
+//setPathToDefault sets the demosPath variable to what should be the default tf directory
+//TODO check for Windows
+func setPathToDefault() {
 	usr, _ := user.Current()
 	demosPath = fmt.Sprintf("%v/%v", usr.HomeDir, `.steam/steam/steamapps/common/Team Fortress 2/tf/`)
 	fmt.Println(demosPath)
 }
 
+//GetDemos calls Walk with demoVisitor, which in turn stores all of the demo
+//details found in the package variable demos and then returns that variable.
 func GetDemos() []Demo {
 	demos = demos[:0]
 	filepath.Walk(demosPath, demoVisitor)

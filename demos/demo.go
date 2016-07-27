@@ -41,11 +41,11 @@ func (d *Demo) Date() time.Time {
 	return d.info.ModTime()
 }
 
-//Returns the path to the demo from within the TF folder
+//PathInTFFolder returns path to the demo from within the TF folder
 //(Since TF2 only searches directly in the TF folder unless told otherwise)
 //A little bit hackish
 func (d *Demo) PathInTFFolder() string {
-	return strings.Replace(d.Path(), strings.Replace(demosPath+string(os.PathSeparator), "/", string(os.PathSeparator), -1), "", 1)
+	return strings.Split(d.Path(), "/tf/")[1]
 }
 
 func (d *Demo) Events() []Event {
