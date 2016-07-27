@@ -63,7 +63,9 @@ func (d *Demo) Date() time.Time {
 //(Since TF2 only searches directly in the TF folder unless told otherwise)
 //A little bit hackish
 func (d *Demo) PathInTFFolder() string {
-	return strings.Split(d.Path(), "/tf/")[1]
+	//Make sure we don't crash if they don't choose the tf folder properly
+	temp := strings.Split(d.Path(), "/tf/")
+	return temp[len(temp)-1]
 }
 
 //Events returns a slice of Event objects parsed from any json file corresponding
