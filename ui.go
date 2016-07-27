@@ -11,7 +11,8 @@ var (
 	demolist []demos.Demo
 )
 
-//MainWindow creates main gui
+//MainWindow expands on the QMainWindow struct to hold a few key components
+//of our UI
 type MainWindow struct {
 	*ui.QMainWindow
 	list    *ui.QListWidget
@@ -19,6 +20,7 @@ type MainWindow struct {
 	events  *ui.QPlainTextEdit
 }
 
+//NewMainWindow builds the program's main window and returns the created object
 func NewMainWindow() *MainWindow {
 	window := &MainWindow{}
 	window.QMainWindow = ui.NewMainWindow()
@@ -48,6 +50,8 @@ func NewMainWindow() *MainWindow {
 	return window
 }
 
+//setupWidgets adds the widgets that display dynamic information (the demo list
+//and the demo details) to the main window
 func (w *MainWindow) setupWidgets() {
 	w.list = ui.NewListWidget()
 	w.list.OnItemSelectionChanged(w.displayDemoDetails)
@@ -60,6 +64,7 @@ func (w *MainWindow) setupWidgets() {
 	w.events.SetReadOnly(true)
 }
 
+//createMenuBar creates and adds the menu bars to the main window
 func (w *MainWindow) createMenuBar() {
 	selectFolder := ui.NewActionWithTextParent(w.Tr("Select Demo Folder"), w)
 	selectFolder.OnTriggered(w.selectDemoFolder)
@@ -78,6 +83,9 @@ func (w *MainWindow) createMenuBar() {
 	demoMenu.AddAction(deleteDemo)
 }
 
+//selectDemoFolder updates the status bar, and controls the flow for opening
+//the folder select prompt, and then calling displayDemos on the main window
+//once a folder has been selected
 func (w *MainWindow) selectDemoFolder() {
 	w.StatusBar().ShowMessage("Finding demo files...")
 	setDemoFolder()
@@ -85,6 +93,8 @@ func (w *MainWindow) selectDemoFolder() {
 	w.displayDemos()
 }
 
+//displayDemos loops over the slice of demos, and displays their names in the
+//main window's list.
 func (w *MainWindow) displayDemos() {
 	w.list.Clear()
 	demolist = demos.GetDemos()
@@ -101,6 +111,8 @@ func (w *MainWindow) displayDemos() {
 	w.list.SetCurrentRow(0)
 }
 
+//displayDemoDetails updates the details and events fields on the UI,
+//showing the information corresponding to the currently selected demo
 func (w *MainWindow) displayDemoDetails() {
 	if len(demolist) == 0 {
 		return
@@ -109,10 +121,11 @@ func (w *MainWindow) displayDemoDetails() {
 	row := w.list.CurrentRow()
 
 	//Display the file details
-	w.details.SetPlainText(fmt.Sprintf("User: %v\nMap: %v\nCommand: playdemo %v\nDate: %v\n",
+	w.details.SetPlainText(fmt.Sprintf("User: %v\nMap: %v\nCommand: playdemo %v\nType: %v\nDate: %v\n",
 		demolist[row].ClientName(),
 		demolist[row].MapName(),
 		demolist[row].PathInTFFolder(),
+		demolist[row].Type(),
 		demolist[row].Date().Format("Jan 2 15:04:05, 2006")))
 
 	//Display the event details
@@ -123,15 +136,19 @@ func (w *MainWindow) displayDemoDetails() {
 	w.events.SetPlainText(s)
 }
 
+//playSelectedDemo calls Play() on whatever demo is selected
 func (w *MainWindow) playSelectedDemo() {
 	demolist[w.list.CurrentRow()].Play()
 }
 
+//deleteSelectedDemo calls Delete() on whatever demo is selected
 func (w *MainWindow) deleteSelectedDemo() {
 	demolist[w.list.CurrentRow()].Delete()
 	w.list.CurrentItem().Delete()
 }
 
+//setDemoFolder opens the dialog to select a directory, and sets the demo search
+//path to the chosen directory.
 func setDemoFolder() {
 	demos.SetPath(ui.QFileDialogGetExistingDirectory())
 }
