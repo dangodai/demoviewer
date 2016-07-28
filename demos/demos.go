@@ -2,8 +2,8 @@ package demos
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
-	"os/user"
 	"path/filepath"
 	"sort"
 	//"fmt"
@@ -15,7 +15,7 @@ var (
 )
 
 func init() {
-	setPathToDefault()
+	setPathFromFile()
 }
 
 //Sorting functions for []Demo
@@ -62,17 +62,19 @@ func (a ByDate) Less(i, j int) bool { return a[i].Date().Before(a[j].Date()) }
 
 //SetPath sets package variable demosPath, which is used to search for demo files
 func SetPath(p string) {
+	fmt.Println("Setting path: ", p)
 	demosPath = p
 	demos = demos[:0]
+	ioutil.WriteFile("path.data", []byte(p), 0644)
 	filepath.Walk(demosPath, demoVisitor)
 }
 
-//setPathToDefault sets the demosPath variable to what should be the default tf directory
-//TODO check for Windows
-func setPathToDefault() {
-	usr, _ := user.Current()
-	demosPath = fmt.Sprintf("%v/%v", usr.HomeDir, `.steam/steam/steamapps/common/Team Fortress 2/tf/`)
-	fmt.Println(demosPath)
+//setPathFromFile reads the path.data file for a saved directory to load
+func setPathFromFile() {
+	path, err := ioutil.ReadFile("path.data")
+	if err == nil {
+		SetPath(string(path))
+	}
 }
 
 //GetDemos calls Walk with demoVisitor, which in turn stores all of the demo

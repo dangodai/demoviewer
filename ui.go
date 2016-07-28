@@ -46,7 +46,7 @@ func NewMainWindow() *MainWindow {
 
 	window.SetCentralWidget(container)
 
-	//window.displayDemos()
+	window.displayDemos()
 	return window
 }
 
