@@ -66,12 +66,14 @@ func (w *MainWindow) setupWidgets() {
 
 //createMenuBar creates and adds the menu bars to the main window
 func (w *MainWindow) createMenuBar() {
+	//Set up File menu
 	selectFolder := ui.NewActionWithTextParent(w.Tr("Select Demo Folder"), w)
 	selectFolder.OnTriggered(w.selectDemoFolder)
 
 	fileMenu := w.MenuBar().AddMenuWithTitle("File")
 	fileMenu.AddAction(selectFolder)
 
+	//Set up Demo menu
 	playDemo := ui.NewActionWithTextParent(w.Tr("Play Demo"), w)
 	playDemo.OnTriggered(w.playSelectedDemo)
 	deleteDemo := ui.NewActionWithTextParent(w.Tr("Delete Demo"), w)
@@ -81,6 +83,40 @@ func (w *MainWindow) createMenuBar() {
 	demoMenu.AddAction(playDemo)
 	demoMenu.AddSeparator()
 	demoMenu.AddAction(deleteDemo)
+
+	//Set up Sort menu
+	sortNameAZ := ui.NewActionWithTextParent(w.Tr("Sort by name (A->Z)"), w)
+	sortNameAZ.OnTriggered(func() { w.sort("NameAZ") })
+	sortNameZA := ui.NewActionWithTextParent(w.Tr("Sort by name (Z->A)"), w)
+	sortNameZA.OnTriggered(func() { w.sort("NameZA") })
+
+	sortMapAZ := ui.NewActionWithTextParent(w.Tr("Sort by map (A->Z)"), w)
+	sortMapAZ.OnTriggered(func() { w.sort("MapAZ") })
+	sortMapZA := ui.NewActionWithTextParent(w.Tr("Sort by map (Z->A)"), w)
+	sortMapZA.OnTriggered(func() { w.sort("MapZA") })
+
+	sortUserAZ := ui.NewActionWithTextParent(w.Tr("Sort by user (A->Z)"), w)
+	sortUserAZ.OnTriggered(func() { w.sort("UserAZ") })
+	sortUserZA := ui.NewActionWithTextParent(w.Tr("Sort by user (Z->A)"), w)
+	sortUserZA.OnTriggered(func() { w.sort("UserZA") })
+
+	sortDateNew := ui.NewActionWithTextParent(w.Tr("Sort by date (Newest)"), w)
+	sortDateNew.OnTriggered(func() { w.sort("DateNew") })
+	sortDateOld := ui.NewActionWithTextParent(w.Tr("Sort by date (Oldest)"), w)
+	sortDateOld.OnTriggered(func() { w.sort("DateOld") })
+
+	sortMenu := w.MenuBar().AddMenuWithTitle("Sort")
+	sortMenu.AddAction(sortNameAZ)
+	sortMenu.AddAction(sortNameZA)
+	sortMenu.AddSeparator()
+	sortMenu.AddAction(sortMapAZ)
+	sortMenu.AddAction(sortMapZA)
+	sortMenu.AddSeparator()
+	sortMenu.AddAction(sortUserAZ)
+	sortMenu.AddAction(sortUserZA)
+	sortMenu.AddSeparator()
+	sortMenu.AddAction(sortDateNew)
+	sortMenu.AddAction(sortDateOld)
 }
 
 //selectDemoFolder updates the status bar, and controls the flow for opening
@@ -90,6 +126,28 @@ func (w *MainWindow) selectDemoFolder() {
 	w.StatusBar().ShowMessage("Finding demo files...")
 	setDemoFolder()
 	w.StatusBar().ShowMessage("Demo files loaded")
+	w.displayDemos()
+}
+
+func (w *MainWindow) sort(t string) {
+	switch t {
+	case "NameAZ":
+		demos.SortByNameAZ()
+	case "NameZA":
+		demos.SortByNameZA()
+	case "MapAZ":
+		demos.SortByMapAZ()
+	case "MapZA":
+		demos.SortByMapZA()
+	case "UserAZ":
+		demos.SortByUserAZ()
+	case "UserZA":
+		demos.SortByUserZA()
+	case "DateNew":
+		demos.SortByDateNewest()
+	case "DateOld":
+		demos.SortByDateOldest()
+	}
 	w.displayDemos()
 }
 
